@@ -5,6 +5,6 @@ module.exports = defineConfig({
       "baseUrl": "https://demo.realworld.io/",
       "defaultCommandTimeout": 10000,
       "supportFile": false,
-      "watchForFileChanges": false,
+ пше 
   }
 });

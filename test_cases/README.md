@@ -25,3 +25,9 @@ This file contains test cases for [Conduit](https://demo.realworld.io/) project.
 ## Commenting
 * [x] [add comment](comments/add_comment.md)
 * [] [delete comment](comments/delete_comment.md)
+
+# API
+
+## User and Authentication
+
+* [x] [register user](api/register_user.md)
