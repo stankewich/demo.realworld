@@ -62,7 +62,7 @@ describe('Comments', () => {
             });
     });
 
-    it.only('should delete comment', () => {
+    it('should delete comment', () => {
 
         getRandomArticle();
         const comment = addComment();

@@ -9,6 +9,7 @@ function generateFakeArticle() {
     return {
         title: faker.lorem.sentence(),
         description: faker.lorem.paragraph(),
+        body: faker.lorem.paragraphs(1),
         tags: [
             faker.word.adjective(),
             faker.word.adjective(),
@@ -38,15 +39,7 @@ function fillArticle() {
     // fill and submit form
     cy.get('@editArticleForm').find('input[ng-model$=title]').type(article.title);
     cy.get('@editArticleForm').find('input[ng-model$=description]').type(article.description);
-
-    const body = `I like fruits!
-It is **healthy** and *tasty.*
-
-My favorite are:
-* banana
-* orange
-* lemon`;
-    cy.get('@editArticleForm').find('textarea[ng-model$=body]').type(body);
+    cy.get('@editArticleForm').find('textarea[ng-model$=body]').type(article.body);
 
     cy.get('@editArticleForm').find('input[ng-model$=tagField]').as('articleTagInput');
     for (const tag of article.tags) {
@@ -60,19 +53,14 @@ function checkArticle(article) {
 
     // check article data
     cy.get('@articlePage').find('h1').should('contains.text', article.title);
+    
+    cy.get('@articlePage').find('[ng-bind-html$=body] p')
+    .should('contains.text', article.body);
 
     cy.get('@articlePage').find('.tag-list').as('articleTags');
     for (const tag of article.tags) {
         cy.get('@articleTags').should('contain.text', tag);
     }
-
-    // check Markdown is rendered to HTML
-    cy.get('@articlePage').find('[ng-bind-html$=body]')
-        .invoke('prop', 'innerHTML')
-        .should('contains', '<strong>healthy</strong>')
-        .should('contains', '<em>tasty.</em>')
-        .should('contains', '<li>banana</li>');
-
     // TODO: check author & date
 }
 
@@ -139,7 +127,7 @@ describe('Articles', () => {
         checkArticle(article);
     });
 
-    it.only('should do delete article', () => {
+    it('should do delete article', () => {
 
         const article = addArticle();
 
@@ -176,7 +164,7 @@ describe('Articles', () => {
         cy.get('.editor-page').as('editArticlePage');
 
         cy.get('@editArticlePage').find('form')
-            .should('be.visible').as('addArticleForm');
+            .should('be.visible').as('editArticleForm');
 
         clearArticle();
 

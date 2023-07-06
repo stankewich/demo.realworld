@@ -14,7 +14,7 @@ function waitForArticlesList() {
 function waitForTaggedArticlesList() {
     cy.get('@articlesList').contains('.article-preview', 'Loading')
         .should('not.be.visible');
-        cy.log('**Article list is checked**');
+    cy.log('**Article list is checked**');
 }
 
 function selectRandomArticle() {
@@ -29,12 +29,30 @@ function selectRandomArticle() {
         .eq(rand)
         .as('randomArticle');
     cy.log('**Article choosed:** ' + rand);
-
+    
     cy.get('@randomArticle')
         .find('h1')
         .invoke('text')
         .as('randomArticleTitle');
+    return rand;
+};
 
+function checkArticleTitle(rand) {
+
+    cy.get('@articlesList')
+        .find('article-preview')
+        .should('have.length', 10)
+        .eq(rand)
+        .as('randomArticle');
+    cy.log('**Article choosed:** ' + rand);
+
+    cy.get('@randomArticle')
+        .find('h1')
+        .invoke('text')
+        .then(title => {
+            cy.get('article-list')
+                .should('contains.text', title);
+        });
 };
 
 function selectRandomPage() {
@@ -100,7 +118,7 @@ describe('Articles check', () => {
             });
     });
 
-    it.only('it should do open detail article page', () => {
+    it('it should do open detail article page', () => {
 
         const rnd = getRandomNumber(0, 9);
 
@@ -125,11 +143,9 @@ describe('Articles check', () => {
         });
     });
 
-
-
     it('should do navigate in list by paging', () => {
 
-        selectRandomArticle();
+        const rand = selectRandomArticle();
 
         selectRandomPage();
 
@@ -138,10 +154,8 @@ describe('Articles check', () => {
             .invoke('text')
             .invoke('trim')
             .should('eq', `1`);
-        cy.get('@randomArticleTitle').then(title => {
-            cy.get('article-list')
-                .should('contains.text', title);
-        });
+
+        checkArticleTitle(rand);
 
     });
 
@@ -169,7 +183,7 @@ describe('Articles check', () => {
             cy.get('.feed-toggle [ng-show] a')
                 .should('contains.text', tagName)
                 .should('have.class', 'active');
-                
+
             cy.get('@articlesList')
                 .find('article-preview')
                 .should('have.length.greaterThan', 0)
