@@ -9,15 +9,13 @@ Register user via API test case
 ### Register new user
 
 2. Send a request with **POST** method 
-3. The payload to API endpoint should be with empty `{keys}`
+3. The payload to API endpoint should be with incorrect data
 4. Received status should be **422**
 
 ## Check new user is registered
 
-5. Received answer should saying `{keys}` can't be blank
-
+5. Received answer should saying email can't be blank
+```
 ## After
 
 6. Set base URL back to 'https://demo.realworld.io/'
-
-`{keys}` for registration user are `username`, `email` and `password` according to documentation.

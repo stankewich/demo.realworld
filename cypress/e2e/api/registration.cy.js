@@ -1,11 +1,10 @@
 ///<reference types="cypress" />
-import { randomUser } from '/cypress/support/createuser.js';
+import { createRandomUser } from '/cypress/support/createuser.js';
 
 const BACKEND_BASE_URL = 'https://api.realworld.io/api';
 const DEFAULT_BASE_URL = Cypress.config('baseUrl');
 
-const user = randomUser;
-const payload = { user };
+const user = createRandomUser();
 
 before(() => {
     cy.log('set base url to backend');
@@ -21,7 +20,7 @@ describe('User registration via API', () => {
 
     it('should do register user', () => {
 
-        cy.request('POST', '/users', payload)
+        cy.request('POST', '/users', { user })
             .then(({ status, body }) => {
                 debugger;
                 expect(status).to.eq(200);
